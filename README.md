@@ -6,3 +6,6 @@ Il est simple d'ajouter de nouvelles rubriques et des nouveaux textes dans ces r
 Faites en ce que vous voulez !
 
 C'est pas du haut niveau de programmation, mais ça peut dépanner
+
+<img width="742" alt="Sans titre" src="https://github.com/Giribot/Generateur-de-reponse-automatique-via-formulaire-a-cliquer/assets/29394604/30b37f67-b776-4749-825b-866a4363bff4">
+
