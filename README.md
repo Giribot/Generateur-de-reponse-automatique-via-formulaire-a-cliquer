@@ -7,5 +7,6 @@ Faites en ce que vous voulez !
 
 C'est pas du haut niveau de programmation, mais ça peut dépanner
 
-<img width="742" alt="Sans titre" src="https://github.com/Giribot/Generateur-de-reponse-automatique-via-formulaire-a-cliquer/assets/29394604/30b37f67-b776-4749-825b-866a4363bff4">
 
+
+<img width="742" alt="Sans titre" src="https://github.com/Giribot/Generateur-de-reponse-automatique-via-formulaire-a-cliquer/assets/29394604/c803b84d-e00f-4a90-b2d0-c6478b20b1cc">
