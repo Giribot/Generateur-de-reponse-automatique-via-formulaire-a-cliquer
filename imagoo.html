@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Générateur de compte-rendu kinésithérapie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+        }
+        .section-title {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Générateur de compte-rendu kinésithérapie</h1>
+    <form id="reportForm">
+        <div>
+            <span class="section-title">Sexe du patient :</span>
+            <label><input type="radio" name="sexe" value="homme" checked> Homme</label>
+            <label><input type="radio" name="sexe" value="femme"> Femme</label>
+        </div>
+        
+        <!-- Rubriques et phrases générées dynamiquement -->
+        <div id="rubriquesContainer"></div>
+
+        <button type="button" onclick="generateReport()">Générer le compte-rendu</button>
+        <button type="button" onclick="clearForm()">Effacer le formulaire</button>
+        <button type="button" onclick="copyToClipboard()">Copier le texte généré</button>
+    </form>
+    <h2>Compte-rendu généré</h2>
+    <textarea id="reportOutput" readonly></textarea>
+
+    <script>
+        // Définition des rubriques et phrases
+        var rubriques = [
+            {
+                nom: "État initial",
+                phrases: [
+                    "Le patient était en pleine forme.",
+                    "Le patient était encombré.",
+                    "Le patient était fatigué.",
+                    "Le patient était absent.",
+                    "Le patient dort.",
+                    "Le patient est malade.",
+                    "Le patient est fatigué.",
+                    "Le patient est agité.",
+                    "Le patient ne veut pas faire sa séance.",
+                    "Le patient est absent."
+                ]
+            },
+            {
+                nom: "Prise en charge",
+                phrases: [
+				    "Une séance de kinésithérapie a été faite.",
+                    "Une séance de kinésithérapie respiratoire a été faite.",
+                    "Le patient n'a pas pu faire sa séance jusqu'au bout.",
+                    "Le patient n'a pas voulu faire sa séance.",
+                    "Des exercices de renforcement musculaire ont été effectués.",
+                    "Des techniques de mobilisation articulaire ont été appliquées.",
+                    "Le patient a été évalué pour déterminer le plan de traitement.",
+                    "Des mesures de rééducation ont été prises en compte.",
+                    "Un plan de réhabilitation a été élaboré pour le patient.",
+                    "La séance s'est arrêté avant la fin car le patient était trop fatigué.",
+					"La séance de kinésithérapie s'est bien déroulée.",
+                ]
+            },
+            {
+                nom: "Interventions",
+                phrases: [
+                    "Le patient a reçu un massage thérapeutique.",
+					"Le patient a eut une séance de mobilisations passives articulaires et d'étirements musculaires.",
+                    "Le patient a suivi une séance d'exercices de renforcement.",
+                    "Le patient a effectué des exercices de rééducation proprioceptive.",
+                    "Le patient a participé à une séance de réadaptation fonctionnelle.",
+                    "Le patient a bénéficié de techniques de relaxation musculaire.",
+                    "Une thérapie par la chaleur a été administrée au patient.",
+                    "Des techniques de thérapie manuelle ont été appliquées.",
+                    "Des étirements musculaires ont été réalisés sur le patient.",
+                    "Le patient a été guidé pour effectuer des exercices à domicile.",
+                    "Des conseils ont été donnés au patient pour le soulagement de la douleur."
+                ]
+            },
+            {
+                nom: "Kinésithérapie respiratoire",
+                phrases: [
+                    "Le patient a suivi une séance de drainage bronchique.",
+                    "Des exercices de respiration diaphragmatique ont été pratiqués.",
+                    "Le patient a bénéficié d'une ventilation non invasive.",
+					"Le patient a bénéficié d'accélération du flux expiratoire dans un but de désencombrement bronchique.",
+                    "Le patient a réalisé des techniques d'expiration forcée.",
+                    "Des postures spécifiques ont été enseignées au patient pour l'amélioration de la respiration."
+                ]
+            },
+            {
+                nom: "Observations",
+                phrases: [
+                    "Le patient a montré des signes d'amélioration.",
+                    "Le patient a exprimé de la douleur pendant la séance.",
+                    "Le patient a bien toléré la séance.",
+                    "Le patient a eu des difficultés à réaliser certains exercices.",
+                    "Le patient a exprimé de la satisfaction après la séance.",
+                    "Le patient a montré une amélioration de la capacité respiratoire.",
+                    "Le patient a fait des progrès significatifs par rapport à la dernière séance.",
+                    "La fréquence cardiaque du patient a été surveillée pendant la séance.",
+                    "Le patient a été évalué pour ajuster le plan de traitement kinésithérapeutique.",
+                    "Des mesures préventives ont été prises pour éviter les complications."
+                ]
+            },
+            {
+                nom: "Absences et séances non effectuées",
+                phrases: [
+                    "Le patient n'est pas venu en séance.",
+                    "Le patient était malade et n'a pas pu assister à la séance.",
+                    "Le patient était trop fatigué pour la séance.",
+                    "Le patient était hospitalisé et n'a pas pu participer à la séance.",
+                    "Le patient était avec sa famille et n'a pas pu assister à la séance.",
+                    "Le patient a annulé la séance à la dernière minute.",
+                    "Le patient a eu des complications de santé inattendues.",
+                    "Le patient a manqué la séance en raison d'une urgence personnelle.",
+                    "Le patient a été retardé en raison de problèmes de transport.",
+                    "La séance a été reprogrammée en raison d'un conflit d'horaire."
+                ]
+            }
+            // Ajoutez d'autres rubriques au besoin
+        ];
+
+        // Fonction pour générer dynamiquement les rubriques et phrases dans le formulaire
+        function generateRubriques() {
+            var rubriquesContainer = document.getElementById('rubriquesContainer');
+
+            rubriques.forEach(function(rubrique) {
+                var rubriqueDiv = document.createElement('div');
+                rubriqueDiv.innerHTML = '<span class="section-title">' + rubrique.nom + ' :</span>';
+
+                rubrique.phrases.forEach(function(phrase) {
+                    rubriqueDiv.innerHTML += '<label><input type="checkbox" name="phrases" value="' + phrase + '"> ' + phrase + '</label>';
+                });
+
+                rubriquesContainer.appendChild(rubriqueDiv);
+            });
+        }
+
+        // Appeler la fonction pour générer les rubriques au chargement de la page
+        generateRubriques();
+
+        // Fonction pour générer le compte-rendu
+        function generateReport() {
+            var form = document.getElementById('reportForm');
+            var sexe = form.querySelector('input[name="sexe"]:checked').value;
+            var checkboxes = form.querySelectorAll('input[name="phrases"]:checked');
+            var report = [];
+            
+            checkboxes.forEach(function(checkbox) {
+                var phrase = checkbox.value;
+                if (sexe === 'femme') {
+                    phrase = phrase.replace("Le patient", "La patiente")
+                                   .replace("fatigué", "fatiguée")
+								   .replace("retardé", "retardée")
+                                   .replace("absent", "absente");
+                } else {
+                    phrase = phrase.replace("fatigué", "fatigué")
+                                   .replace("absent", "absent");
+                }
+                report.push(phrase);
+            });
+            
+            document.getElementById('reportOutput').value = report.join("\n");
+        }
+
+        // Fonction pour effacer le formulaire
+        function clearForm() {
+            var checkboxes = document.querySelectorAll('input[name="phrases"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+            document.querySelector('input[name="sexe"][value="homme"]').checked = true; // Remettre le sexe à "homme"
+            document.getElementById('reportOutput').value = ""; // Effacer le texte généré
+        }
+
+        // Fonction pour copier le texte généré dans le presse-papiers
+        function copyToClipboard() {
+            var reportOutput = document.getElementById('reportOutput');
+            reportOutput.select();
+            document.execCommand('copy');
+            alert('Le texte généré a été copié dans le presse-papiers.');
+        }
+    </script>
+</body>
+</html>
